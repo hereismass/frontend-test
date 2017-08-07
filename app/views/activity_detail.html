@@ -1,3 +1,15 @@
 <div class="activity_detail" data-ng-controller="ActivityDetailController">
-  This should be a call detail
+  <div data-ng-if="!call">
+    Loading call
+  </div>
+  <div data-ng-if="call">
+    {{call.call_type}}
+    {{call.id}}
+    {{call.to}}
+    {{call.created_at | date:'hh:mm'}}
+
+    <div class="" data-ng-click="archiveCall()">
+      Archive call
+    </div>
+  </div>
 </div>

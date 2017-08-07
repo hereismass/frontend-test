@@ -1,3 +1,27 @@
 <div class="activities" data-ng-controller="ActivitiesController">
-  There should be a list of calls here
+  
+  <div data-ng-if="!callsByDay">
+    Loading calls
+  </div>
+  <div data-ng-if="callsByDay && callsByDay.totalCalls === 0">
+    No calls
+  </div>
+
+  <div data-ng-if="callsByDay && callsByDay.totalCalls > 0">
+    <div data-ng-repeat="day in callsByDay.days">
+      <div class="">{{day.date | date:'dd.MM'}}</div>
+      <ul>
+        <li data-ng-repeat="call in day.calls" data-ng-click="openCallDetails(call)">
+          {{call.call_type}}
+          {{call.id}}
+          {{call.to}}
+          {{call.created_at | date:'hh:mm'}}
+        </li>
+      </ul>
+    </div>
+
+    <div class="" data-ng-click="archiveAllCalls()">
+      Archive all
+    </div>
+  </div>
 </div>
