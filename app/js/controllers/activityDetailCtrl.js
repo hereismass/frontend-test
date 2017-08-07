@@ -5,13 +5,18 @@
     .module('angular-ac')
     .controller('ActivityDetailController', ($scope, $state, $stateParams, callService) => {
 
+      //function to go back to list
+      $scope.backToList = () => {
+        $state.go("activities");
+      };
+
       $scope.archiveCall = () => {
         // we remove data from scope
         $scope.call = null;
         callService.archiveCall($stateParams.id)
           .then((call) => {
             //after archive, we go to the main list page
-            $state.go("activities");
+            $scope.backToList();
           })
           .catch((resp) => {
             //we show an error if archiveCall didnt succeded

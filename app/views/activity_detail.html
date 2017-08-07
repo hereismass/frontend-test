@@ -1,14 +1,47 @@
 <div class="activity_detail" data-ng-controller="ActivityDetailController">
-  <div data-ng-if="!call">
-    Loading call
+  <div data-ng-if="!call" class="loading">
+    Loading call...
   </div>
-  <div data-ng-if="call">
-    {{call.call_type}}
-    {{call.id}}
-    {{call.to}}
-    {{call.created_at | date:'hh:mm'}}
+  <div data-ng-if="call" class="call-details">
+    <div data-ng-if="call.direction === 'outbound'">
+      <h1 class="call-number">
+        <i class="material-icons color-success" data-ng-if="call.call_type === 'answered'">call_made</i>
+        <i class="material-icons color-fail" data-ng-if="call.call_type === 'missed'">call_missed_outgoing</i>
+        {{call.to}}
+      </h1>
 
-    <div class="" data-ng-click="archiveCall()">
+      <span class="call-date">Called at <strong>{{call.created_at | date:'HH:mm'}}</strong> on <em>{{call.created_at | date:'EEEE dd MMMM yyyy'}}</em></span>
+
+      <span class="call-infos" data-ng-if="call.call_type === 'answered'"><strong>{{call.from}}</strong> called via <strong>{{call.via}}</strong> for <strong>{{call.duration | duration}}</strong></span>
+      <span class="call-infos" data-ng-if="call.call_type === 'missed'"><strong>{{call.from}}</strong> tried to call via <strong>{{call.via}}</strong></span>
+    </div>
+
+    <div data-ng-if="call.direction === 'inbound'">
+      <h1 class="call-number">
+        <i class="material-icons color-success" data-ng-if="call.call_type === 'answered'">call_received</i>
+        <i class="material-icons color-info" data-ng-if="call.call_type === 'voicemail'">voicemail</i>
+        <i class="material-icons color-fail" data-ng-if="call.call_type === 'missed'">call_missed</i>
+        {{call.from}}
+      </h1>
+
+      <span class="call-date">Called at <strong>{{call.created_at | date:'HH:mm'}}</strong> on <em>{{call.created_at | date:'EEEE dd MMMM yyyy'}}</em></span>
+      <span class="call-infos" data-ng-if="call.call_type === 'answered'"><strong>{{call.to}}</strong> answered via <strong>{{call.via}}</strong> for <strong>{{call.duration | duration}}</strong></span>
+      <span class="call-infos" data-ng-if="call.call_type === 'missed'">tried to call on <strong>{{call.via}}</strong></span>
+      <span class="call-infos" data-ng-if="call.call_type === 'voicemail'">left a message on <strong>{{call.via}}</strong> of <strong>{{call.duration | duration}}</strong></span>
+    </div>
+
+    
+
+    <div class="back-tolist pointer" data-ng-click="backToList()">
+      <div class="back-tolist-icon">
+        <i class="material-icons color-info">arrow_back</i>
+      </div>
+      Back
+    </div>
+    <div class="archive pointer" data-ng-click="archiveCall()">
+      <div class="archive-icon">
+        <i class="material-icons color-info">archive</i>
+      </div>
       Archive call
     </div>
   </div>

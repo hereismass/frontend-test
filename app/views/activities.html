@@ -1,26 +1,50 @@
 <div class="activities" data-ng-controller="ActivitiesController">
   
-  <div data-ng-if="!callsByDay">
-    Loading calls
+  <div data-ng-if="!callsByDay" class="loading">
+    Loading calls...
   </div>
-  <div data-ng-if="callsByDay && callsByDay.totalCalls === 0">
+  <div data-ng-if="callsByDay && callsByDay.totalCalls === 0" class="no-calls">
     No calls
   </div>
 
-  <div data-ng-if="callsByDay && callsByDay.totalCalls > 0">
-    <div data-ng-repeat="day in callsByDay.days">
-      <div class="">{{day.date | date:'dd.MM'}}</div>
+  <div data-ng-if="callsByDay && callsByDay.totalCalls > 0" class="calls-list">
+    <div data-ng-repeat="day in callsByDay.days" class="day-container">
+      <div class="day">
+        <span>{{day.date | date:'EEEE dd MMMM yyyy'}}</span>
+      </div>
       <ul>
-        <li data-ng-repeat="call in day.calls" data-ng-click="openCallDetails(call)">
-          {{call.call_type}}
-          {{call.id}}
-          {{call.to}}
-          {{call.created_at | date:'hh:mm'}}
+        <li data-ng-repeat="call in day.calls" data-ng-click="openCallDetails(call)" class="pointer">
+          <div class="call-icon">
+            <i class="material-icons color-success" data-ng-if="call.direction === 'outbound' && call.call_type === 'answered'">call_made</i>
+            <i class="material-icons color-fail" data-ng-if="call.direction === 'inbound' && call.call_type === 'missed'">call_missed</i>
+            <i class="material-icons color-fail" data-ng-if="call.direction === 'outbound' && call.call_type === 'missed'">call_missed_outgoing</i>
+            <i class="material-icons color-success" data-ng-if="call.direction === 'inbound' && call.call_type === 'answered'">call_received</i>
+            <i class="material-icons color-info" data-ng-if="call.direction === 'inbound' && call.call_type === 'voicemail'">voicemail</i>
+          </div>
+          <div class="call-hour">
+            {{call.created_at | date:'HH:mm'}}
+          </div>
+
+          <div class="call-infos no-overflow" data-ng-if="call.direction === 'outbound'">
+            <span class="call-number">{{call.to}}</span>
+            <span class="call-via" data-ng-if="call.call_type === 'answered'"><strong>{{call.from}}</strong> called via <strong>{{call.via}}</strong></span>
+            <span class="call-via" data-ng-if="call.call_type === 'missed'"><strong>{{call.from}}</strong> tried to call via <strong>{{call.via}}</strong></span>
+          </div>
+
+          <div class="call-infos no-overflow" data-ng-if="call.direction === 'inbound'">
+            <span class="call-number">{{call.from}}</span>
+            <span class="call-via" data-ng-if="call.call_type === 'answered'"><strong>{{call.to}}</strong> answered via <strong>{{call.via}}</strong></span>
+            <span class="call-via" data-ng-if="call.call_type === 'missed'">tried to call on <strong>{{call.via}}</strong></span>
+            <span class="call-via" data-ng-if="call.call_type === 'voicemail'">left a message on <strong>{{call.via}}</strong></span>
+          </div>
         </li>
       </ul>
     </div>
 
-    <div class="" data-ng-click="archiveAllCalls()">
+    <div class="archive pointer" data-ng-click="archiveAllCalls()">
+      <div class="archive-icon">
+        <i class="material-icons color-info">archive</i>
+      </div>
       Archive all
     </div>
   </div>
